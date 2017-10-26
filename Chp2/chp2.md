@@ -10,6 +10,20 @@
 ## 2. Dynamically Allocated Arrays
 ## 3. Structure and Unions
 ## 4. Examples
+### Polynomials
+
+[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp2/polynomial_addition_v2.cpp)
+
+### Sparse Matrices
+
+[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp2/)
+
+### String
+
+#### Pattern Matching: KMP Algorithm
+[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp2/KMP_v2.cpp)
+
+
 ### Identifier
 **Identifier** is a name we give to each variables.
 
