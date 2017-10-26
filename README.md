@@ -9,5 +9,5 @@ Reference: Ellis Horowitz, Sartaj Sahni and Susan Anderson-Freed, Fundamentals o
 * [CHP 2. Arrays and Structures](https://github.com/mhnam/data-structure/blob/master/chp2/chp2.md)
 * [CHP 3. Stacks and Queues](https://github.com/mhnam/data-structure/blob/master/chp3/chp3.md)
 * [CHP 4. Linked Lists](https://github.com/mhnam/data-structure/blob/master/chp4/chp4.md)
-* [CHP 5. Trees]https://github.com/mhnam/data-structure/blob/master/chp5/chp5.md)
-* [CHP 6. Graphs]https://github.com/mhnam/data-structure/blob/master/chp6/chp6.md)
+* [CHP 5. Trees](https://github.com/mhnam/data-structure/blob/master/chp5/chp5.md)
+* [CHP 6. Graphs](https://github.com/mhnam/data-structure/blob/master/chp6/chp6.md)
