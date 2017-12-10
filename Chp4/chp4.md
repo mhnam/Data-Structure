@@ -144,15 +144,15 @@ node_pointer search(node_pointer ptr, int want_to_find){
 }
 ```
 
-### Merge
+### Merge two list in assending order
 ```c
-void merge(node_pointer x, node_pointer y, node_pointer* z){ /* merge two list in asscending order */
+void sort_merge(node_pointer x, node_pointer y, node_pointer* z){ /* merge two list in asscending order */
   node_pointer last;
   last = (node_pointer)malloc(sizeof(node));
   *z = last; /* new sorted list will be start from z */
   
   while(x && y){ /* x and y move and point each linked list */
-    if(x->data <= y->data)
+    if(x->data <= y->data) /* change <= to >= for descending order */
       last->link = x; last = x; x = x->next;
     else
       last->link = y; last = y; y=y->next;
@@ -164,6 +164,119 @@ void merge(node_pointer x, node_pointer y, node_pointer* z){ /* merge two list i
 ```
 
 ## 3. Dynamically Linked Stacks and Queues
+We can also operate stacks and queues with linked list rather array!
+
+### Stacks
+#### Declare
+```c
+#define MAX_STACKS 10 /* maximum number of stacks */
+#define IS_EMPTY(ptr)(!(ptr))
+#define IS_FULL(ptr)(!(ptr))
+
+typedef struct{
+  /* some fields */
+} element;
+
+typedef struct stack* stack_pointer;
+typedef struct{
+  element data;
+  stack_pointer link;  
+} stack;
+
+stack_pointer top[MAX_STACKS]; /* purpose? SEE P22 */
+```
+
+#### Push
+```c
+void pushs(stak_pointer *top, element item){
+  stack_pointer temp = (stack_pointer)malloc(sizeof(stack));
+  if(IS_FULL(temp)){
+    printf("the memory is full");
+    exit(1);
+  }
+  
+  temp->item = item;
+  temp->link = *top; *top = temp; /* temp become the first element in stack */
+}
+```
+
+#### Pop
+```c
+element pops(stak_pointer *top){
+  stack_pointer temp = *top;
+  element item;
+  
+  if(IS_EMPTY(temp)){
+    printf("the stack is empty");
+    exit(1);
+  }
+  
+  item = temp->item; /* get data */
+  *top = temp->link; /* change top */
+  free(temp);
+  return item;
+}
+```
+
+### Queues
+Similiar to stack!
+
+#### Declare
+```c
+#define MAX_QUEUES 10 /* maximum number of stacks */
+#define IS_EMPTY(ptr)(!(ptr))
+#define IS_FULL(ptr)(!(ptr))
+
+typedef struct{
+  /* some fields */
+} element;
+
+typedef struct queue* queue_pointer;
+typedef struct{
+  element data;
+  queue_pointer link;  
+} queue;
+
+queue_pointer top[MAX_QUEUES]; /* purpose? SEE P22 */
+```
+
+#### Push
+```c
+void pushq(queue_pointer *top, queue_pointer *rear, element item){
+  queue_pointer temp = (queue_pointer)malloc(sizeof(queue));
+  if(IS_FULL(temp)){
+    printf("the memory is full");
+    exit(1);
+  }
+  
+  temp->item = item; temp->link = NULL;
+  
+  //seperate the cases when queue is empty or not
+  if(*top) (*rear)->link = temp; /*if queue is not empty, connect rear and temp */
+  else *top = temp; /*if not, let the temp become the first queue */
+  
+  *rear = temp; /* temp become the last element in the queue */
+}
+```
+
+#### Pop
+```c
+element popq(queue_pointer *top){ /* perfectly same with pops */
+  queue_pointer temp = *top;
+  element item;
+  
+  if(IS_EMPTY(temp)){
+    printf("the queue is empty");
+    exit(1);
+  }
+  
+  item = temp->item; /* get data */
+  *top = temp->link; /* change top */
+  free(temp);
+  return item;
+}
+```
+
 
 ## 4. Additional Operations
 
