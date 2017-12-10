@@ -6,8 +6,8 @@ List is another method (one is array) to store set of elements, but it does not 
 ## Contents
 1. [Introduction](#1-introduction)
 2. [Singly Linked Lists](#2-singly-linked-lists)
-3. [Queues](#3-queues)
-4. [Circular Queues using Dynamic Arrays](#4-circular-queues-using-dynamic-arrays)
+3. [Dynamically Linked Stacks and Queues](#3-dynamically-linked-stacks-and-queues)
+4. [Additional Operations](#4-additional-operations)
 5. [Examples](#5-examples)
 
 ## 1. Introduction
@@ -48,7 +48,7 @@ so that we can not access this pointer variable so that we cannot free forever.*
 ```
 
 ## 2. Singly Linked Lists
-### Idea
+### Introduction
 ```c
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,6 +61,9 @@ typedef struct{
 
 #define IS_EMPTY(ptr)(!(ptr))
 #define IS_FULL(ptr)(!(ptr))
+
+void insert(node_pointer *ptr, node_pointer before, int data);
+void delete(node_pointer *ptr, node_pointer before, node_pointer want_to_delete);
 
 node_pointer ptr = NULL;
 ```
@@ -89,29 +92,87 @@ second->data = 20; second->next = NULL; /* strcpy(second->data, "bat") is also p
 
 ### Insertion
 ```c
-temp = (node_pointer)malloc(sizeof(node));
+void insert(node_pointer *ptr, node_pointer before, int data){ /* insert new node after before, while ptr is the first node */
+  temp = (node_pointer)malloc(sizeof(node));
+  
+  if(IS_FULL(temp)){ /* memory allocation error */
+    printf("the memory is full");
+    exit(1);
+  }
 
-temp->next = first->next; temp->data = 15;
-first->next = temp;
+  if(*ptr){ /* if there is at least one node in the list */
+    temp->next = before->next; temp->data = data;
+    before->next = temp;
+  }
+  else{
+    temp->next = NULL; temp->data = data;
+    *ptr = temp;
+  }
+}
 ```
+
 ### Deletion
-## 3. Queues
-## 4. Circular Queues using Dynamic Arrays
+```c
+void delete(node_pointer *ptr, node_pointer before, node_pointer want_to_delete){ /* delete node after before, while ptr is the first node*/
+
+  if (before)
+    before->next = want_to_delete->next;
+    
+  else /* if the want_to_delete is the first node in the linked list */
+    *ptr = (*ptr)->link;
+    
+  free(want_to_delete);
+}
+```
+
+### Print
+```c
+void print(node_pointer ptr){
+  printf("The list contains: ");
+  for(; ptr; ptr = ptr->next)
+    printf("%4d", ptr->data);
+  printr("\n");
+}
+```
+
+### Search
+```c
+node_pointer search(node_pointer ptr, int want_to_find){
+  for(;ptr;ptr = ptr->next)
+    if(ptr->data == want_to_find) return ptr;
+  return ptr;
+}
+```
+
+### Merge
+```c
+void merge(node_pointer x, node_pointer y, node_pointer* z){ /* merge two list in asscending order */
+  node_pointer last;
+  last = (node_pointer)malloc(sizeof(node));
+  *z = last; /* new sorted list will be start from z */
+  
+  while(x && y){ /* x and y move and point each linked list */
+    if(x->data <= y->data)
+      last->link = x; last = x; x = x->next;
+    else
+      last->link = y; last = y; y=y->next;
+  }
+    if(x) last->next = x; /* to connect left nodes connected after x, to newly declared list */
+    if(y) last->next = y; /* for y */
+    last = *z; *z = last->next; free(last);
+}
+```
+
+## 3. Dynamically Linked Stacks and Queues
+
+## 4. Additional Operations
+
 ## 5. Examples
-### Mazeing Problems
+### Polynomials
+[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp4/maze_solve_v3.cpp)
 
-[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp3/maze_solve_v3.cpp)
-
-### Evaluation of Expression
-
-#### Infix
-
-[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp2/)
-
-### String
-
-#### Pattern Matching: KMP Algorithm
-[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp2/KMP_v2.cpp)
+### Equivalence Class
 
 
-## Useful Macros
+#### Sparse Matrix
+[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp4/)
