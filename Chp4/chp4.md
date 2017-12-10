@@ -282,10 +282,11 @@ element popq(queue_pointer *top){ /* perfectly same with pops */
 
 ## 5. Examples
 ### Polynomials
-[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp4/maze_solve_v3.cpp)
+"NOT AVAILABLE AT THIS MOMENT"
+[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp4/polynomial_list_v1.cpp)
 
 ### Equivalence Class
-
+[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp4/equiv_list_v1.cpp)
 
 #### Sparse Matrix
-[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp4/)
+[Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp4/matrix_list_v2.cpp)
