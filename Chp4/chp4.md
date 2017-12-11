@@ -12,7 +12,7 @@ List is another method (one is array) to store set of elements, but it does not 
 
 ## 1. Introduction
 ### Motivation
-We have seen a method to store set of elements using _"sequential representation"_ (_i.e.,_array) which is quite powerful.
+We have seen a method to store set of elements using _"sequential representation"_ ( _i.e.,_ array) which is quite powerful.
 But it has some difficulties occurs when as follows:
 * Insertion, Deletion of an arbitrary element; take time to push or pull all the elements
 * Storing several list of varying sizes in different arrays of maximum size; some wast of storage (unused)
