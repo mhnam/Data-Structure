@@ -7,7 +7,6 @@ when using array or linked list)
 ## Contents
 1. [Introduction](#1-introduction)
 2. [Binary Trees](#2-binary-trees)
--traversals
 3. [Threaded Binary Trees](#3-threaded-binary-trees)
 4. [Heaps](#4-heaps)
 5. [Binary Search Trees](#5-binary-search-trees)
