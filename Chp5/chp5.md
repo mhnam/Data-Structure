@@ -10,7 +10,7 @@ when using array or linked list)
 3. [Threaded Binary Trees](#3-threaded-binary-trees)
 4. [Heaps](#4-heaps)
 5. [Binary Search Trees](#5-binary-search-trees)
-6. [Examples] (#6-examples)
+6. [Examples](#6-examples)
 
 ## 1. Introduction
 ### Motivation
@@ -76,7 +76,7 @@ subtree and the right subtree
 _i.e.,_
 1) Binary tree is a tree that the degree of any given node must not exceed two.
 2) There can be maximum 2^{i-1} where i>=1 number of nodes on level i; 
-Hence, the maximum 2^k -1 where k>=1 number of nodes in a whole binary tree
+Hence, the maximum 2^k -1 where k>=1 number of nodes in a whole binary tree (called **full binary tree**)
 
 _c.f.,_
 1) There can be empty binary tree unlike a tree
@@ -86,18 +86,101 @@ _c.f.,_
     * Complete binary tree: a binary tree whose node is filled from left to right, top to bottom
     (i.e., each level is completely filled or filled from the left)
 
-
 ### Implementation
 #### Matrix
+```c
+#define MAX_NODES = 100;
+tree[MAX_NODES]
+
+/* for i th node, its parent is at floor(i/2)
+while its left child is at 2i and right child is at 2i+1*/
+```
 
 #### Linked list
+```c
+define struct tree* tree_pointer;
+define struct{
+   int data;
+   tree_pointer left;
+   tree_pointer right;
+}tree;
+```
 
 ### Operation(1): Traversals
+There is six possible combinations of traversal, but we only consider three of them - inorder, postorder, preorder, which corresponds to the polynomial expression
+
+* inorder: LVR
+* postorder: LRV
+* preorder: VLR
+
 #### Inorder
+```c
+void inorder(tree_pointer prt){
+   if(ptr){
+      inorder(ptr->left_child);
+      printf("%d", prt->data);
+      inorder(ptr->right_child);
+   }
+}
+
+void iter_inorder(tree_pointer prt){/* need STACK to implement! */
+   int top = -1; /* initialise top */
+   tree_pointer stack[MAX_STACK_SIZE]; /* declare stack array */
+   for(;;){
+      for(; node; node = node->left_child) /* keep goes to left */
+         add(&top, node); /* save the sequence of path through far left */
+      node = delete(&top);
+      if(!node) break;
+      printf("%d", node->data);
+      node = node->right_child;
+   }
+}
+```
 
 #### Postorder
+```c
+void postorder(tree_pointer prt){
+   if(ptr){
+      inorder(ptr->left_child);
+      inorder(ptr->right_child);
+      printf("%d", prt->data);      
+   }
+}
+```
 
 #### Preorder
+```c
+void preorder(tree_pointer prt){
+   if(ptr){
+      printf("%d", prt->data);
+      inorder(ptr->left_child);
+      inorder(ptr->right_child);
+   }
+}
+```
+
+#### Levelorder
+```c
+void levelorder(tree_pointer ptr){
+   inf front = rear = 0;
+   tree_pointer queue[MAX_QUEUE_SIZE];
+   if(!ptr) return;
+   addq(front, &rear, ptr); /* save the root in queue */
+   for(;;){
+      prt = deleteq(&front, rear); /* pop-up each queue element once in a time */
+      if(ptr){
+         printf("%d", ptr->data); /* print the current queue */
+         /* Since the sequence goes from left to right, and saves into queue,
+         the printing sequence will always goes from left to right */
+         if(ptr->left_child)
+            addq(front, &rear, ptr->left_child);
+         if(ptr->right_child)
+            addq(front, &rear, ptr->right_child);
+      }
+      else break; /* if there is no more element in queue */
+   }
+}
+```
 
 ### Operation(2): Copy
 
