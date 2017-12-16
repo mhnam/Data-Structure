@@ -154,7 +154,7 @@ poly_pointer cpadd(poly_pointer a, poly_pointer b){
       case 1: /* a->expon > b->expon */
         attach(a->coef, a->expon, &rear);
         a = a->link; break;
-    }while(!done) /* if a and b are all used */
+    }while(!done); /* if a and b are all used */
     
     lastd->link = d;
     
