@@ -8,7 +8,8 @@ List is another method (one is array) to store set of elements, but it does not 
 2. [Singly Linked Lists](#2-singly-linked-lists)
 3. [Dynamically Linked Stacks and Queues](#3-dynamically-linked-stacks-and-queues)
 4. [Additional Operations](#4-additional-operations)
-5. [Examples](#5-examples)
+5. [Doubly Linked Lists](#5-doubly-linked-list)
+6. [Examples](#6-examples)
 
 ## 1. Introduction
 ### Motivation
@@ -404,9 +405,11 @@ void cerase(node_pointer ptr){
 }
 ```
 
+## 5. Doubly Linked List
+###
 
 
-## 5. Examples
+## 6. Examples
 ### Polynomials
 [Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp4/polynomial_list_v1.cpp)
 
