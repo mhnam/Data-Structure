@@ -181,6 +181,9 @@ SEE [Section 3](#3-minimum-cost-spanning-trees) below
 
 **Biconnected Components** is a graph that contains none of articulation points, which is highly demanded in various area, to generate stable connection.
 
+_i.e.,_
+1) Biconnected components of a connected undirected graph is a maximal biconnected subgraph of G.
+
 #### Implementation
 
 ## 3. Minimum Cost Spanning Trees
