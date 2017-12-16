@@ -278,57 +278,6 @@ element popq(queue_pointer *top){ /* perfectly same with pops */
 ```
 
 ## 4. Additional Operations
-### Circular Linked List
-#### Motivation
-To operate the list more efficiently, meaning to reuse the freed node, we introduce new idea **Circular Linked List**.
-
-#### Getting Node from avail
-The function gets the freed node that are not in use if it is available, otherwise declare new node
-
-```c
-//assume that avail is the node_pointer that points to the first node in the list of freed nodes
-node_pointer get_node(void){
-  node_pointer node;
-  if(avail){
-    node = avail;
-    avail = avail->link;
-  }
-  else{
-    node = (node_pointer) malloc(sizeof(node));
-    if(IS_FULL(node)){
-      printf("The memory is full");
-      exit(1);
-  }
-  return node;
-}
-```
-
-#### Add Node to avail
-This function frees node and add to link of usuable nodes
-
-```c
-//assume that avail is the node_pointer that points to the first node in the list of freed nodes
-void ret_node(node_pointer ptr){
-  ptr->link = avail;
-  avail = ptr;
-}
-```
-
-#### Erase Nodes***
-This function erase unwanted node in between linked list in circular
-
-```c
-void cerase(node_pointer ptr){
-  node_pointer temp;
-  if(*ptr){
-    temp = (*ptr)->link;
-    (*ptr)->link = avail;
-    avail = temp;
-    *ptr = NULL;    
-  }
-}
-```
-
 ### Non-Circular Linked List: Chain
 #### Invert Nodes
 This function change the sequence of the linked list in circular
@@ -364,6 +313,97 @@ node_pointer concatenate(node_pointer ptr1, node_pointer ptr2){
   }
 }
 ```
+
+### Circular Linked List
+#### Motivation
+To operate the list more efficiently, such as reusing the freed node, we introduce new idea **Circular Linked List**.
+
+#### Adding new node at the front
+This function add new node at the front of the circular list
+
+```c
+//assume that ptr is the last of the circular list
+void insert_front(node_pointer *ptr, node_pointer node){
+  if(IS_EMPTY(*ptr)){
+   *ptr = node;
+   node->link = node;
+  }
+  else{
+    node->link = (*ptr)->link;
+    (*ptr)->link = node;
+  }
+}
+```
+
+#### Counting the length of the list
+This function counts the length of the circular list
+
+```c
+//assume that ptr is the begining of the circular list
+int length(node_pointer ptr){
+  node_pointer temp = NULL;
+  int counter = 0;
+  
+  if(ptr){
+    temp = ptr;
+    
+    do{
+      count++; /* because there is at least one node 'ptr' */
+      temp = temp->link;
+    }while (temp != ptr);
+    
+    retrun count;  
+}
+```
+
+#### Applications: Using freed node
+##### Getting Node from avail
+The function gets the freed node that are not in use if it is available, otherwise declare new node
+
+```c
+//assume that avail is the node_pointer that points to the first node in the list of freed nodes
+node_pointer get_node(void){
+  node_pointer node;
+  if(avail){
+    node = avail;
+    avail = avail->link;
+  }
+  else{
+    node = (node_pointer) malloc(sizeof(node));
+    if(IS_FULL(node)){
+      printf("The memory is full");
+      exit(1);
+  }
+  return node;
+}
+```
+
+##### Add Node to avail
+This function frees node and add to link of usuable nodes
+
+```c
+//assume that avail is the node_pointer that points to the first node in the list of freed nodes
+void ret_node(node_pointer ptr){
+  ptr->link = avail;
+  avail = ptr;
+}
+```
+
+##### Erase Nodes***
+This function erase unwanted node in between linked list in circular
+
+```c
+void cerase(node_pointer ptr){
+  node_pointer temp;
+  if(*ptr){
+    temp = (*ptr)->link;
+    (*ptr)->link = avail;
+    avail = temp;
+    *ptr = NULL;    
+  }
+}
+```
+
 
 
 ## 5. Examples
