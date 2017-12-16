@@ -1,3 +1,9 @@
+//
+// Title: Huffman Coding
+// Author: Minhyuk Nam
+// Purpose: Compress the text file which is written in ASCII code into binary number, using tree structure
+//
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
