@@ -46,7 +46,7 @@ by 1) strongly connected and 2) weakly connected, while **strongly connected** m
 a path from u to v exists for every pair u, v in V. While **weakly connected** implies that there is a path between any vertex
 as undirected path.
 
-**Connected Component** is an undirected graph is a maximal connected subgraph,
+**Connected Component** is an undirected graph is a maximal connected subgraph.
 
 ### Implementation
 We can implement graph using 1) adjacency matrix or 2) adjacency list
@@ -79,18 +79,89 @@ node_pointer graph[MAX_VERTICES];
 ## 2. Basic Operations
 ### Depth First Search (DFS)
 #### Definition
+Depth First Search is finding goal nodes by traversing through all connected vertex (possible to visit at the current position) unless it is already visited. The traverse stops when the goal node is reached or the stack is empty.
+
+_c.f.,_
+1) Its complexity using adjacency list is O(V), but O(n^2) if we use matrix because we need to visit all the elements of the matrix to search all the possible way to traverse.
+2) Stack is the key of this algorithm!
 
 #### Implementation
+```c
+//assume that v is just given as starting vertex
+void dfs(int v){
+  node_pointer w = NULL;
+  
+  visited[v] = TRUE; /* base case */
+  printf("%5d", v); /* base case */
+  for(w = graph[v]; w; w = w->link) /* from starting point to all of its connected nodes */
+    if(!visited[w->vertex])
+      dfs(w->vertex);
+}
+```
 
 ### Breadth First Search (BFS)
 #### Definition
+Breadth First Search is finding goal nodes by traversing at each level completely by printing all the connected vertices from the started vertex while adding to queue. Letting extend to visit the unvisited vertices which we have found at this moment. The traverse stops when the goal node is reached or the queue is empty.
+
+_c.f.,_
+1) Its complexity using adjacency list is O(E) because we visit all connected edges and decide whether to visit or not, unlike dfs(visit directly after new vertex is found). However O(n^2) if we use matrix because we need to visit all the elements of the matrix to search all the possible way to traverse.
+2) Queue is the key of this algorithm!
 
 #### Implementation
+```c
+//need queue to implement this function
+
+typedef struct queue* queue_pointer;
+typedef struct{
+  int vertex;
+  queue_pointer link;
+} queue;
+
+void addq(queue_pointer *, queue_pointer *, int);
+int deleteq(queue_pointer *);
+
+void bfs(int v){
+  node_pointer w;
+  queue_pointer front, rear;
+  front = rear = NULL;
+  
+  printf("%5d", v); /* base case */
+  visited[v] = TRUE; /* base case */
+  addq(&front, &rear, v); /* basecase */
+  
+  while(front){
+    v = deleteq(&front);
+    for(w = graph[v]; w; w = w->link)
+      if(!visited[w->vertex]){
+        printf("%5f", w->vertex);
+        addq(&front, &rear, w->vertex);
+        visited[w->vertex] = TRUE;
+      }
+  }
+}
+```
+
+#### DFS vs. BFS
+Depending on situation, if the goal is at the left-most position, then DFS is better, but if the goal is at the right-upper position, then BFS is faster. Hence, the each algorithms complexity is depends on the situation. Hence there is a algorithm that mix two algorithm called **Iterative Depth Search**, which is mainly used in AI. This operate DFS by setting maximum depth.
 
 ### Connected Components
 #### Definition
+To find the connected components, use either dfs or bfs then prints only visited vertex.
+
+_c.f.,_
+1) The complexity of the algorithm is O(n+e) using adjacency list and dfs, because we need to traverse all the vertices for choosing the vertex to start dfs, while dfs needs O(e) complexity.
 
 #### Implementation
+```c
+void connected(void){
+  int i;
+  
+  for(i=0; i<n; i++){ /* this loop let to start dfs at all possible vertex if it is still unvisited */
+    if(!visited[i]){
+      dfs(i); /* dfs(i) would print all the connected vertices from vertex i */
+      printf("\n");
+}
+```
 
 ### Spanning Trees
 #### Definition
