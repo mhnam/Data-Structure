@@ -42,12 +42,12 @@ int main() {
 		printf("Error opening file"); return 1;
 	}
 
-	fp_tree = fopen("20150555_tree.txt", "w");
+	fp_tree = fopen("huffman_tree.txt", "w");
 	if (fp_tree == NULL) {
 		printf("Error opening file"); return 1;
 	}
 
-	fp_code = fopen("20150555_coding.txt", "w");
+	fp_code = fopen("huffman_coding.txt", "w");
 	if (fp_code == NULL) {
 		printf("Error opening file"); return 1;
 	}
