@@ -277,12 +277,97 @@ element popq(queue_pointer *top){ /* perfectly same with pops */
 }
 ```
 
-
 ## 4. Additional Operations
+### Circular Linked List
+#### Motivation
+To operate the list more efficiently, meaning to reuse the freed node, we introduce new idea **Circular Linked List**.
+
+#### Getting Node from avail
+The function gets the freed node that are not in use if it is available, otherwise declare new node
+
+```c
+//assume that avail is the node_pointer that points to the first node in the list of freed nodes
+node_pointer get_node(void){
+  node_pointer node;
+  if(avail){
+    node = avail;
+    avail = avail->link;
+  }
+  else{
+    node = (node_pointer) malloc(sizeof(node));
+    if(IS_FULL(node)){
+      printf("The memory is full");
+      exit(1);
+  }
+  return node;
+}
+```
+
+#### Add Node to avail
+This function frees node and add to link of usuable nodes
+
+```c
+//assume that avail is the node_pointer that points to the first node in the list of freed nodes
+void ret_node(node_pointer ptr){
+  ptr->link = avail;
+  avail = ptr;
+}
+```
+
+#### Erase Nodes***
+This function erase unwanted node in between linked list in circular
+
+```c
+void cerase(node_pointer ptr){
+  node_pointer temp;
+  if(*ptr){
+    temp = (*ptr)->link;
+    (*ptr)->link = avail;
+    avail = temp;
+    *ptr = NULL;    
+  }
+}
+```
+
+### Non-Circular Linked List: Chain
+#### Invert Nodes
+This function change the sequence of the linked list in circular
+
+```c
+node_pointer inver(node_pointer lead){
+  node_pointer middle = NULL;
+  node_pointer trail = NULL;
+  
+  while(lead){
+    trail = middle; /* update trail from middle */
+    middle = lead; /* update middle to lead */
+    middle->link = trail;
+    lead = lead->link; /* update lead */
+}
+```
+
+#### Concatenate two chains
+This function links to given pointer as circular linked list.
+
+```c
+//note that the ptr2 concatenate at the end of the linked list started from ptr1 
+node_pointer concatenate(node_pointer ptr1, node_pointer ptr2){
+  node_pointer temp;
+  if(IS_EMPTY(ptr1)) return ptr2; /* if there is nothing after ptr1 */
+  else{
+    if(IS_EMPTY(ptr2)){
+      for(temp = prt1; temp->link; temp = temp->link)
+        ; /* goes to the end of ptr1; temp->link means as long as there is a link after temp */
+      temp->link = ptr2;
+    }
+    return ptr1;
+  }
+}
+```
+
 
 ## 5. Examples
 ### Polynomials
-"NOT AVAILABLE AT THIS MOMENT"
 [Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp4/polynomial_list_v1.cpp)
 
 ### Equivalence Class
