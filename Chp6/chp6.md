@@ -165,11 +165,21 @@ void connected(void){
 
 ### Spanning Trees
 #### Definition
+Spanning tree is a tree converted from graph by erasing unused edge. Precisely, spanning tree is any tree that 1) consists solely of edges in G and that 2) includes all the vertices in G.
+
+_i.e.,_
+1) If we add more edges than spanning tree needed, then cycle would be generated.
+2) A spanning tree is a minimal subgraph of G such that V(G) is maintained and connected.
+3) To connect n vertices, we need exactly n-1 edges.
 
 #### Implementation
+SEE [Section 3](#3-minimum-cost-spanning-trees) below
 
 ### Biconnected Components and Articulation Points
 #### Definition
+**Articulation Point** is a vertex v of G such that the deletion of v, and its edges incident with v, produces a graph that has at least two connected components.
+
+**Biconnected Components** is a graph that contains none of articulation points, which is highly demanded in various area, to generate stable connection.
 
 #### Implementation
 
