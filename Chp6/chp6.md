@@ -260,10 +260,78 @@ while (T continas fewer than n-1 edges){
 ```
 
 ## 4. Shortest Paths and Transitive Closure
-### Single Source All Destination Algorithm (1): Dijkstra's Algorithm
+Now we want to find the shortest path from vertex to the other verices, if it exist.
 
+Hence, we are going to consider two differnet algorithm:
+- Single Source All Destination: Dijkstra (positive distance), Bellman-Ford (general distance)
+- All Source All Destination: ASAD
+
+### Single Source All Destination Algorithm (1): Dijkstra's Algorithm
+#### Idea
+The basic idea is simillar to prim algorithm as follows:
+- Repeat following procedure for n-1 times:
+  - Consier the shortest path to all vertices except source (if it is connected) from the source
+  - Put a vertex in the source that has the shortest path among found path in this stage
+  
+#### Implementation
+```c
+#define MAX_VERTICES 6 /* maximum number of vertices */
+int cost[][MAX_VERTICES]; /* adjacency martix to represent the cost between path */
+int distance[MAX_VERTICES]; /* represents the shortes path from vertex v to i */
+shor int found[MAX_VERTICES]; /* represents whether the node has the shortes path; meaning whether it is in source */
+int n = MAX_VERTICES;
+
+void shortestpath(int v, int cost[][MAX_VERTICES], int distance[], int n, short int found[]){
+  int i, u, w;
+  
+  //initialisation
+  for (i = 0; i < n; i++){
+    found[i] = FALSE;
+    disance[i] = cost[v][i];
+  }
+  found[v] = TRUE;
+  distance[v] = 0;
+  
+  //finding path
+  for(i = 0; i < n-2; i++){
+    u = choose(distance, n, found);
+    found[u] = TRUE;
+    for(w = 0; w < n; w++){
+      if(!found[w])
+        if(distance[u] + cost[u][w] < distance[w])
+          distance[w] = distance[u] + cost[u][w];
+    }
+  }
+}
+
+//find the smallest distance not yet checked
+int choose(int distance[], int n, short int found[]){
+  int i, min, minpos;
+  min = INT_MAX;
+  minpos = -1;
+  
+  for(i = 0; i < n; i++)
+    if(distance[i] < min && !found[i]
+      min = distance[i]; minpos = i;
+  
+  return minpos;
+}
+
+```
 ### Single Source All Destination Algorithm (2): Bellman-Ford's Algorithm
 
+```c
+void BellmanFord(int n, int v){
+  for(int = 0; i < n; i++)
+    dist[i] = length[v][i];
+  
+  for(int k = 2; k <= n-1; k++)
+    for(each u such that u != v and u has at least one incoming edge)
+      for(each <i, u> in the graph)
+        if(dist[u] > dist[i] + length[i][u])
+          dist[u] = dist[i] + length[i][u];
+}
+```
 ### All Source All Destination Algorithm (ASAD)
 
 ## 5. Examples
