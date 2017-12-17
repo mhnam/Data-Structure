@@ -204,7 +204,7 @@ _c.f.,_
   - Check whether the addiditional edge makes loop
 
 #### Implementation
-```
+```c
 T = {};
 while(T contains less than n-1 edges && E is not empty){
   choose a least cost edge (v,w) from E; /* use heap to implement */
@@ -225,7 +225,7 @@ if (T contains fewer than n-1 edges)
   - Keep select the smaller cost edge incedent with the two end points of current path. (no need to check cycle)
 
 #### Implementation
-```
+```c
 T = {};
 TV= {0}; /* assume that we start from vertex 0; this can be arbitrary set */
 while (T contains fewer than n-1 edges){
@@ -248,7 +248,7 @@ The complexity is simillar to kruskal but, Prim may consider the same edge twice
   - Choose the smaller cost edge from each connected components. (vertex for the first case)
   
 #### Implementation
-```
+```c
 //quite difficult to implement because the program should be operate in parallel (for loop should be done at once)
 T = {};
 connected_components = {(v) | v in V};
