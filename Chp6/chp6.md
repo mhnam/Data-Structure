@@ -187,11 +187,77 @@ _i.e.,_
 #### Implementation
 
 ## 3. Minimum Cost Spanning Trees
+**Cost of the spanning tree** of a weighted undirected graph (_i.e.,_ there are numbers written at each edges), is just sum of the costs of the edges in the spanning tree. 
+
+Our goal is to minimise the cost of the spanning tree, and there are three different greedy algorithm to find this:
+1) Kruskal's Algorithm
+2) Prim's Algorithm
+3) Sollin's Algorithm
+
+_c.f.,_
+1) In general, greedy algorithm does not guarantee the optimal path for whole algorithm, but for this case (for a least cost or a highest profit criterion), all of above algorithm (greedy algorithm) guarantees its mimial cost.
+
 ### Kruskal's Algorithm
+#### Idea
+- Repeat the below procedure till all verices are added, which is equivalent to n-1 edges:
+  - Keep select the edge in accending order of the cost
+  - Check whether the addiditional edge makes loop
+
+#### Implementation
+```
+T = {};
+while(T contains less than n-1 edges && E is not empty){
+  choose a least cost edge (v,w) from E; /* use heap to implement */
+  delete (v,w) from E;
+  if ((v,w) does not create a cycle in T) /* search: check if there is same vertex in T */
+    add (v,w) to T; /* union: add (v,w) in T */
+  else
+    discard (v,w);
+}
+if (T contains fewer than n-1 edges)
+  printf("No spanning tree\n");
+```
 
 ### Prim's Algorithm
+#### Idea
+- Select the edge that has smallest cost. /* base case */
+- Repeat the below procedure till all vertices are added, which is equivalent to n-1 edges:
+  - Keep select the smaller cost edge incedent with the two end points of current path. (no need to check cycle)
+
+#### Implementation
+```
+T = {};
+TV= {0}; /* assume that we start from vertex 0; this can be arbitrary set */
+while (T contains fewer than n-1 edges){
+  let (u,v) be a least cost edge such that u is in TV but not for v; /* by doing this no need to check cycle */
+  if(there is no such edge)
+    break; /* comparable to the condition E is not empty in the while loop in Kruskal algorithm, and this has further more condtion */
+  add v to TV;
+  add (u,v) to T;
+}
+if(T contains fewer than n-1 edges)
+  printf("No spanning tree\n");
+```
+
+#### Kruskal vs. Prim
+The complexity is simillar to kruskal but, Prim may consider the same edge twice or even more, unlike Kruskal, Kruskal can be considered as better algorithm. However, this does not have to check cycle, which is easy to implement!
 
 ### Sollin's Algorithm
+#### Idea
+- Repeat the below procedure till all vertices are added, which is equivalent to n-1 edges:
+  - Choose the smaller cost edge from each connected components. (vertex for the first case)
+  
+#### Implementation
+```
+//quite difficult to implement because the program should be operate in parallel (for loop should be done at once)
+T = {};
+connected_components = {(v) | v in V};
+while (T continas fewer than n-1 edges){
+  for(c in connected_components){
+   choose the the less cost edge (a,b) where a is end vertex of c, but b does not in c; 
+  }
+}
+```
 
 ## 4. Shortest Paths and Transitive Closure
 ### Single Source All Destination Algorithm (1): Dijkstra's Algorithm
