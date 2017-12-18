@@ -129,10 +129,10 @@ void bfs(int v){
   visited[v] = TRUE; /* base case */
   addq(&front, &rear, v); /* basecase */
   
-  while(front){
+  while (front){
     v = deleteq(&front);
-    for(w = graph[v]; w; w = w->link)
-      if(!visited[w->vertex]){
+    for (w = graph[v]; w; w = w->link)
+      if (!visited[w->vertex]){
         printf("%5f", w->vertex);
         addq(&front, &rear, w->vertex);
         visited[w->vertex] = TRUE;
@@ -156,8 +156,8 @@ _c.f.,_
 void connected(void){
   int i;
   
-  for(i=0; i<n; i++){ /* this loop let to start dfs at all possible vertex if it is still unvisited */
-    if(!visited[i]){
+  for (i=0; i<n; i++){ /* this loop let to start dfs at all possible vertex if it is still unvisited */
+    if (!visited[i]){
       dfs(i); /* dfs(i) would print all the connected vertices from vertex i */
       printf("\n");
 }
@@ -184,7 +184,89 @@ SEE [Section 3](#3-minimum-cost-spanning-trees) below
 _i.e.,_
 1) Biconnected components of a connected undirected graph is a maximal biconnected subgraph of G.
 
+#### Key Idea
+To verify whether it is biconnected component it is useful to check whether there is more than two vertices (or one edge) in common in each component.
+
+1) If the root does not have at least two children, then the root is AP
+2) Similarly, if the child of vertex u cannot reach the ancestor of u than u is an AP.
+
+=> By this two rule, we generate variable low(u) and use if dfn(u) <= low(w) then we can say that u is AP
+
+```
+low(u) = min{dfn(u), min{low(w) | w is a child of u}, min{dfn(w) | (u,w) is a back edge}}
+```
+which represents 1) itself, 2) the highest vertex (minimum dfn) that can reach through their children, or 3) the highest vertex that can itself can reach (it there is an backedge starting from u)
+
 #### Implementation
+```c
+#define MIN2(x,y)((x)<(y) ? (x) : (y))
+short int dfn[MAX_VERTICES];
+short int low[MAX_VERTICES];
+int num;
+
+//this function initialise declared variables
+void init(void){
+  int i;
+  for (i = 0; i < n; i++)
+    dfn[i] = low[i] = -1;
+  num = 0;
+}
+
+//this function calculates just dfn and low values
+void dfnlow(int u, int v){ /* dfs begins at u while v is the parent of u if exists */
+  //initialise
+  node_pointer ptr;
+  int w;
+  
+  dfn[u] = low[u] = num++; /* apply the first rule, and to generate dfn */
+  
+  //start to traverse over graph
+  for (ptr = graph[u]; ptr; ptr = ptr->link){
+    w = ptr->vertex; /* goes to child of considering node (u at the begining) */
+    
+    if (dfn[w] < 0){ /* if the node is unvisited */
+      dfnlow(w, u);
+      low[u] = MIN2(low[u], low[w]); /* if low[w] is smaller, meaning there is a backedge from w to elsewhere higher than u */
+    }
+    else if(w != v) /* node that is neighbor to each other, meaning it is not a backedge */
+      low[u] = MIN2(low[u], dfn[w]); /* if dfn[w] is smaller than it implies that this stage moves from u to w */
+  }
+}
+
+//enough to use this function without dfnlow
+void bicon(int u, int v){
+  //initialise
+  node_pointer ptr;
+  int w, x, y;
+  
+  dfn[u] = low[u] = num++; /* apply the first law for low[u] */
+  
+  //start searching
+  for (ptr = graph[u]; ptr; ptr = ptr->link){
+    w = ptr->vertex;
+    
+    if (v != w && dfn[w] < dfn[u]) /* if it is not biconnected component; child and parent are different and  */
+      add(&top, u, w) /* add edge to stack, meaning they are in one subgraph */
+      
+    if (dfn[w] < 0){ /* if we found unvisited vertex, give */
+      bicon(w, u);
+      low[u] = MIN2(low[u], low[w]); /* apply second law for low[u] */
+      
+      if(low[w] >= dfn[u]){ /* if we found biconnected component; print stack */
+        printf("New biconnected component: ");
+        
+        do{
+          delete(&top, &x, &t);
+          printf("<%d, %d>", x, y);
+        } while (!(x==u) && (y==w));
+        
+        printf("\n");
+      }
+    }
+    else if (w != v) low[u] = MIN2(low[w], dfn[w]); /* apply third law for low[u] */
+  }
+}
+```
 
 ## 3. Minimum Cost Spanning Trees
 **Cost of the spanning tree** of a weighted undirected graph (_i.e.,_ there are numbers written at each edges), is just sum of the costs of the edges in the spanning tree. 
@@ -206,7 +288,7 @@ _c.f.,_
 #### Implementation
 ```c
 T = {};
-while(T contains less than n-1 edges && E is not empty){
+while (T contains less than n-1 edges && E is not empty){
   choose a least cost edge (v,w) from E; /* use heap to implement */
   delete (v,w) from E;
   if ((v,w) does not create a cycle in T) /* search: check if there is same vertex in T */
@@ -227,10 +309,10 @@ if (T contains fewer than n-1 edges)
 #### Implementation
 ```c
 T = {};
-TV= {0}; /* assume that we start from vertex 0; this can be arbitrary set */
+TV = {0}; /* assume that we start from vertex 0; this can be arbitrary set */
 while (T contains fewer than n-1 edges){
   let (u,v) be a least cost edge such that u is in TV but not for v; /* by doing this no need to check cycle */
-  if(there is no such edge)
+  if (there is no such edge)
     break; /* comparable to the condition E is not empty in the while loop in Kruskal algorithm, and this has further more condtion */
   add v to TV;
   add (u,v) to T;
@@ -253,7 +335,7 @@ The complexity is simillar to kruskal but, Prim may consider the same edge twice
 T = {};
 connected_components = {(v) | v in V};
 while (T continas fewer than n-1 edges){
-  for(c in connected_components){
+  for (c in connected_components){
    choose the the less cost edge (a,b) where a is end vertex of c, but b does not in c; 
   }
 }
@@ -298,13 +380,13 @@ void shortestpath(int v, int cost[][MAX_VERTICES], int distance[], int n, short 
   distance[v] = 0;
   
   //finding path
-  for(i = 0; i < n-2; i++){ /* starting node and last node are omitted from searching */
+  for (i = 0; i < n-2; i++){ /* starting node and last node are omitted from searching */
     u = choose(distance, n, found); /* this founds the shortest path only passing vertex in S */
     found[u] = TRUE;
-    for(w = 0; w < n; w++){ /* update with newly found path (distance) if it is smaller than previous one */
-      if(!found[w]) /* consider only vertices not in S */
+    for (w = 0; w < n; w++){ /* update with newly found path (distance) if it is smaller than previous one */
+      if (!found[w]) /* consider only vertices not in S */
         /* distance[w] is current cost, while distance[u] + cost[u][w] calculates the distance via newly found vertex u */
-        if(distance[u] + cost[u][w] < distance[w])
+        if (distance[u] + cost[u][w] < distance[w])
           distance[w] = distance[u] + cost[u][w];
     }
   }
@@ -319,14 +401,14 @@ int choose(int distance[], int n, short int found[]){
   minpos = -1;
   
   //find min
-  for(i = 0; i < n; i++)
-    if(distance[i] < min && !found[i])
+  for (i = 0; i < n; i++)
+    if (distance[i] < min && !found[i])
       min = distance[i]; minpos = i;
   
   return minpos;
 }
-
 ```
+
 ### Single Source All Destination Algorithm (2): Bellman-Ford's Algorithm
 #### Motivation / Introduction
 Since we have ignored the set S which is the set of vertices whose shortest past has been found, we can not consider the negative cost. This is because previous logic is guaranteed by the fact that new path can not be better than the previously found path, which is hold by all positive cost.
