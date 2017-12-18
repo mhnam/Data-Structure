@@ -267,13 +267,18 @@ Hence, we are going to consider two differnet algorithm:
 - All Source All Destination: ASAD
 
 ### Single Source All Destination Algorithm (1): Dijkstra's Algorithm
-#### Idea
+#### Motivation / Introduction
 The basic idea is simillar to prim algorithm as follows:
-- Repeat following procedure for n-1 times:
+- Repeat following procedure for n-2 times (to avoid redundant searching for starting node and last node):
   - Consier the shortest path to all vertices except source (if it is connected) from the source
   - Put a vertex in the source that has the shortest path among found path in this stage
-  
+
+#### Key Idea
+Let S be a set of vertices and v be element whose shortest path has been found (the vertex which has shortest path at each stage). Then the path to vertex w which is not in S must pass through vertices only in S and ending in w.
+
 #### Implementation
+Below two function finds the minimum path length starting from vertex v which is given from main function.
+
 ```c
 #define MAX_VERTICES 6 /* maximum number of vertices */
 int cost[][MAX_VERTICES]; /* adjacency martix to represent the cost between path */
@@ -287,17 +292,18 @@ void shortestpath(int v, int cost[][MAX_VERTICES], int distance[], int n, short 
   //initialisation
   for (i = 0; i < n; i++){
     found[i] = FALSE;
-    disance[i] = cost[v][i];
+    disance[i] = cost[v][i]; /* v is given by main function when this function is called, which is the starting point */
   }
   found[v] = TRUE;
   distance[v] = 0;
   
   //finding path
-  for(i = 0; i < n-2; i++){
-    u = choose(distance, n, found);
+  for(i = 0; i < n-2; i++){ /* starting node and last node are omitted from searching */
+    u = choose(distance, n, found); /* this founds the shortest path only passing vertex in S */
     found[u] = TRUE;
-    for(w = 0; w < n; w++){
-      if(!found[w])
+    for(w = 0; w < n; w++){ /* update with newly found path (distance) if it is smaller than previous one */
+      if(!found[w]) /* consider only vertices not in S */
+        /* distance[w] is current cost, while distance[u] + cost[u][w] calculates the distance via newly found vertex u */
         if(distance[u] + cost[u][w] < distance[w])
           distance[w] = distance[u] + cost[u][w];
     }
@@ -307,11 +313,14 @@ void shortestpath(int v, int cost[][MAX_VERTICES], int distance[], int n, short 
 //find the smallest distance not yet checked
 int choose(int distance[], int n, short int found[]){
   int i, min, minpos;
+  
+  //initialise
   min = INT_MAX;
   minpos = -1;
   
+  //find min
   for(i = 0; i < n; i++)
-    if(distance[i] < min && !found[i]
+    if(distance[i] < min && !found[i])
       min = distance[i]; minpos = i;
   
   return minpos;
@@ -319,19 +328,75 @@ int choose(int distance[], int n, short int found[]){
 
 ```
 ### Single Source All Destination Algorithm (2): Bellman-Ford's Algorithm
+#### Motivation / Introduction
+Since we have ignored the set S which is the set of vertices whose shortest past has been found, we can not consider the negative cost. This is because previous logic is guaranteed by the fact that new path can not be better than the previously found path, which is hold by all positive cost.
+
+However, as we are going to consider general weight, meaning allowing 0 or negative cost, will cause some problem with above algorithm. Hence we are going to consider as follows:
+
+- Repeat following procedure for n-1 times, where n is number of edges starting from n=2 (we can gather the distance when n=1 using cost matrix) :
+  - For each stage, for each vertex (u) in graph, consider every vertex where incoming edge starts from (i), then compare the current distance and new path via i, and if it is small enough, then update
+
+#### Key Idea
+- Consider the shortest path from v to u with at most k, then there can be two cases:
+  1) Current path (what I have found alread) is more faster (may be direct route)
+  2) New path via one vertex, namely i makes smaller cost
+  => dist^k[u] = min{dist^{k-1}[u], min{dist^{k-1}[i]+length[i][u]}} /* note that there may have various path in min{dist^{k-1}[i]+length[i][u]} by considering all possible i */
+  
+_c.f.,_
+1) Dynamic Programming: We call above algorithm as dynamic programming, because we consider 
+
+
+#### Implementation
+Below two function finds the minimum path length starting from vertex v which is given from main function.
 
 ```c
+//"dist array" has been declared as two dimensional, to restrict the number edge use
+
 void BellmanFord(int n, int v){
-  for(int = 0; i < n; i++)
-    dist[i] = length[v][i];
+  int min_i;
   
-  for(int k = 2; k <= n-1; k++)
+  //initialise the distance
+  for(int = 0; i < n; i++)
+    dist[i] = length[v][i]; /* v is given by main function when this function is called, which is the starting point */
+  
+  //finding the minimal distance from v to u
+  for(int k = 2; k <= n-1; k++) /* we restrict the num. of edges from 2 to till n-1 */
     for(each u such that u != v and u has at least one incoming edge)
-      for(each <i, u> in the graph)
-        if(dist[u] > dist[i] + length[i][u])
-          dist[u] = dist[i] + length[i][u];
+      for(each <i, u> in the graph) /* consider the all possible path to reach vertex u what we consider */
+        if(dist[k][u] > dist[k][i] + length[i][u]) /* if the current considering i make the shorter path then current distance */
+          update min_i;
+      dist[k+1][u] = dist[k][min_i] + length[min_i][u];
 }
 ```
+
 ### All Source All Destination Algorithm (ASAD)
+#### Motivation / Introduction
+Now consider the shortest path from all source to all vertices. We can find it by repeating the above algorithm by changing begining vertex, but it may increase complexity (n^3; frankly speaking our new algorithm has also n^3 complexity, but since it is dynamically programmed, it is more efficient)
+
+#### Key Idea
+The key idea is from bullian multiplication of adjaceny matrix to check its connectivity, meaning find path from each source by releasing assumptions (vertices that can be visited)
+
+Consider A^{k-1} and A^{k}, A^{k-1} is the shortest path from i to j going through no vertex with index greater than k does not go through the vertex with index k and so its cost is A^{k-1}[i][j]
+Now consider path go through the vertex k, if there is a path consists of a path from i to k followed by k to j then, it may replace A^{k}[i][j]
+
+=> A^{k}[i][j] = min{A^{k-1}[i][j], A^{k}[i][k]+A^{k}[k][j]}, k>=0; A^{-1}[i][j] = cost[i][j]
+
+#### Implementation
+```c
+void allcosts(int cost[][MAX_VERTICES], int distance[][MAX_VERTICES], int n){
+  int i, j, k;
+  for (i = 0; i < n; i++)
+    for (j = 0; j < n; j++)
+      distance[i][j] = cost[i][j];
+      
+  for (k = 0; k < n; k++)
+    for (i = 0; i < n; i++)
+      for (j = 0; j < n; j++)
+        if (distance[i][k] + distance[k][j] < distance[i][j])
+          distance[i][j] = distance[i][k] + distance[k][j];
+}
+```
 
 ## 5. Examples
+### Kruskal Algorithm [NOT COMPLETED YET]
+[Implementation]()
