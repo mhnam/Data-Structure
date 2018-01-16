@@ -480,5 +480,5 @@ void allcosts(int cost[][MAX_VERTICES], int distance[][MAX_VERTICES], int n){
 ```
 
 ## 5. Examples
-### Kruskal Algorithm [NOT COMPLETED YET]
+### Kruskal Algorithm
 [Implementation](https://github.com/mhnam/Data-Structure/blob/master/Chp6/kruskal_v4.cpp)
